@@ -3,10 +3,10 @@
     <h1>Добавить рецепт</h1>
     <div v-if="visible">
       <div class="input">
-        <input type="text" placeholder="Название рецепта" v-model="title">
+        <input type="text" placeholder="Название рецепта" v-model="form.title">
       </div>
       <div class="input">
-        <input type="text" placeholder="Описание рецепта" v-model="description">
+        <input type="text" placeholder="Описание рецепта" v-model="form.description">
       </div>
     </div>
 
@@ -18,6 +18,10 @@
 </template>
 
 <script>
+import {ref, reactive, computed} from '@vue/composition-api'
+import {useToggle} from '../composition/toggle'
+import {useForm} from '../composition/form'
+
 export default {
   props: {
     onAdd: {
@@ -25,28 +29,10 @@ export default {
       required: true
     }
   },
-  data: () => ({
-    title: '',
-    description: '',
-    visible: true
-  }),
-  methods: {
-    toggle() {
-      this.visible = !this.visible
-    },
-    submit() {
-      const recipe = {
-        title: this.title.trim(),
-        description: this.description.trim(),
-        id: Date.now().toString()
-      }
-      this.title = this.description = ''
-      this.onAdd(recipe)
-    }
-  },
-  computed: {
-    valid () {
-      return this.title.trim() && this.description.trim()
+  setup(props) {
+    return {
+       ...useToggle(),
+       ...useForm(props)
     }
   }
 }
