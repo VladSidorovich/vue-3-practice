@@ -1,4 +1,4 @@
-# vue-compos-prep
+# vue-3-practice
 
 ## Project setup
 ```

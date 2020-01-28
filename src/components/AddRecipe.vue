@@ -1,25 +1,54 @@
 <template>
-  <form class="form">
+  <form class="form" @submit.prevent="submit">
     <h1>Добавить рецепт</h1>
-    <div>
+    <div v-if="visible">
       <div class="input">
-        <input type="text" placeholder="Название рецепта">
+        <input type="text" placeholder="Название рецепта" v-model="title">
       </div>
       <div class="input">
-        <input type="text" placeholder="Описание рецепта">
+        <input type="text" placeholder="Описание рецепта" v-model="description">
       </div>
     </div>
 
     <div class="buttons">
-      <button class="btn" type="submit">Создать</button>
-      <button class="btn secondary" type="button">Убрать форму</button>
+      <button class="btn" type="submit" :disabled="!valid">Создать</button>
+      <button class="btn secondary" type="button" @click="toggle">{{ visible ? 'Убрать' : 'Показать'}} форму</button>
     </div>
   </form>
 </template>
 
 <script>
 export default {
-
+  props: {
+    onAdd: {
+      type: Function,
+      required: true
+    }
+  },
+  data: () => ({
+    title: '',
+    description: '',
+    visible: true
+  }),
+  methods: {
+    toggle() {
+      this.visible = !this.visible
+    },
+    submit() {
+      const recipe = {
+        title: this.title.trim(),
+        description: this.description.trim(),
+        id: Date.now().toString()
+      }
+      this.title = this.description = ''
+      this.onAdd(recipe)
+    }
+  },
+  computed: {
+    valid () {
+      return this.title.trim() && this.description.trim()
+    }
+  }
 }
 </script>
 
